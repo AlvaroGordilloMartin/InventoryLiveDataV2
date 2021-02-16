@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ringtone_value">
+        <item>Basic Tone</item>
+        <item>Basic Bell</item>
+        <item>Beep One</item>
+        <item>Good Morning</item>
+        <item>Piano</item>
+        <item>Flow</item>
+    </string-array>
+    <string-array name="ringtone">
+        <item>Basic Tone</item>
+        <item>Basic Bell</item>
+        <item>Beep One</item>
+        <item>Good Morning</item>
+        <item>Piano</item>
+        <item>Flow</item>
+    </string-array>
+</resources>

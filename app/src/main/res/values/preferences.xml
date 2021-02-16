@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_category_notification">Notificaciones</string>
+    <string name="key_notification">notification</string>
+    <string name="summary_notification">reproducir sonidos para mensajes entrantes y salientes</string>
+    <string name="title_notification">Activar sonido</string>
+    <string name="title_account">Cuenta</string>
+    <string name="summary_account">Privacidad, seguridad y cambiar número</string>
+    <string name="title_ringtone_notification">Tono de notificación</string>
+    <string name="key_ringtone_notification">ringtones</string>
+    <string name="title_category_help">Ayuda</string>
+    <string name="summary_help">Preguntas frecuentes, contáctanos y políticas</string>
+    <string name="title_aboutme">Sobre mi</string>
+    <string name="key_user">user</string>
+    <string name="title_user">Usuario</string>
+    <string name="key_password">password</string>
+    <string name="title_password">Contraseña</string>
+    <string name="key_account">preference</string>
+</resources>

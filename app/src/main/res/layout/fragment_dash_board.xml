@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    tools:context=".iu.DashBoardFragment">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dashboard_tablerow_margin_top"
+        android:layout_height="match_parent" >
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/btInventario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btInventario" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/btDependencias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btDependencias" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+    </TableRow>
+
+   <!-- <View
+        android:layout_height="2dp"
+        android:layout_weight="200dp"
+        android:background="@color/colorPrimaryDark"
+        />-->
+
+    <TableRow
+        android:layout_marginTop="@dimen/dashboard_tablerow_margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/btSecciones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btSecciones" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/btProductos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btProductos" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_marginTop="@dimen/dashboard_tablerow_margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/btPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btPerfil" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/btConfiguracion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btConfiguracion" />
+
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+    </TableRow>
+</TableLayout>

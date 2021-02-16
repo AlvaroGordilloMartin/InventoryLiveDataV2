@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.inventorylivedata.iu.login.LoginViewModel" />
+    </data>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".iu.login.LoginActivity"
+    android:id="@+id/llcontainer"
+    android:padding="@dimen/login_llcontainer_padding"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tvTitleSingUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="46dp"
+        android:text="@string/tvTitle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilUser"
+        app:errorEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="89dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tieUser"
+            android:layout_width="match_parent"
+            android:text="@{viewmodel.user}"
+            android:layout_height="wrap_content"
+            android:hint="@string/tieName" >
+
+            <requestFocus/>
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPassword"
+        app:errorEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        app:endIconMode="password_toggle"
+        tools:layout_editor_absoluteY="230dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiePassword"
+            android:inputType="textPassword"
+            android:text="@{viewmodel.password}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tiePassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            android:id="@+id/chkRemember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:checked="true"
+            android:text="@string/chkRemember" />
+
+        <Button
+            android:id="@+id/btSingUp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:onClick="showSignUp"
+            android:text="@string/btSingUp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btSingIn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="@dimen/login_btLogin_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:onClick="@{() -> viewmodel.validateCredentials()}"
+        android:text="@string/btSignIn" />
+
+    <!-- Segunda opcion: Se hace referencia al ancho de la barra de acción
+        acceciendo al valor del atributo ?attr/actionBarSize
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:id="@+id/llbottombar"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/login_llbottombar_margin_bottom">-->
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:id="@+id/llbottombar"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/login_llbottombar_margin_bottom">
+
+        <ImageButton
+            android:id="@+id/btGoogle"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:src="@drawable/ic_google"
+            android:text="@string/btGoogle" />
+
+        <ImageButton
+            android:id="@+id/btFacebook"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_facebook"
+            android:layout_gravity="bottom"
+            android:text="@string/btFacebook" />
+
+    </LinearLayout>
+
+</LinearLayout>
+</layout>

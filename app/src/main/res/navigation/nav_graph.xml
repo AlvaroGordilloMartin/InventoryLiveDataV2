@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/listDependencyFragment">
+    <fragment
+        android:id="@+id/listDependencyFragment"
+        android:name="com.example.inventorylivedata.iu.dependency.ListDependencyFragment"
+        android:label="ListDependency"
+        tools:layout="@layout/fragment_list_dependency" >
+        <action
+            android:id="@+id/action_listDependencyFragment_to_editDependencyFragment"
+            app:destination="@id/editDependencyFragment" />
+        <argument
+            android:name="Dependency"
+            app:argType="com.example.inventorylivedata.data.model.Dependency" />
+        <action
+            android:id="@+id/action_listDependencyFragment_to_baseDialogFragment"
+            app:destination="@id/baseDialogFragment" />
+        <action
+            android:id="@+id/action_listDependencyFragment_to_addDependencyFragment"
+            app:destination="@id/addDependencyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editDependencyFragment"
+        android:name="com.example.inventorylivedata.iu.dependency.EditDependencyFragment"
+        android:label="fragment_edit_dependency"
+        tools:layout="@layout/fragment_edit_dependency" >
+        <argument
+            android:name="Dependency"
+            app:argType="com.example.inventorylivedata.data.model.Dependency" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.inventorylivedata.iu.preferences.SettingFragment"
+        android:label="SettingFragment">
+        <action
+            android:id="@+id/action_settingFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.inventorylivedata.iu.preferences.AccountFragment"
+        android:label="AccountFragment" />
+    <dialog
+        android:id="@+id/baseDialogFragment"
+        android:name="com.example.inventorylivedata.iu.base.BaseDialogFragment"
+        android:label="BaseDialogFragment" />
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.example.inventorylivedata.iu.producto.ProductFragment"
+        android:label="ProductFragment" />
+    <fragment
+        android:id="@+id/listSeccionesFragment"
+        android:name="com.example.inventorylivedata.iu.secciones.ListSeccionesFragment"
+        android:label="ListSeccionesFragment" >
+
+        <argument
+            android:name="Seccion"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_listSeccionesFragment_to_editSeccionesFragment2"
+            app:destination="@id/editSeccionesFragment" />
+        <action
+            android:id="@+id/action_listSeccionesFragment_to_baseDialogFragment2"
+            app:destination="@id/baseDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editSeccionesFragment"
+        android:name="com.example.inventorylivedata.iu.secciones.EditSeccionesFragment"
+        android:label="EditSeccionesFragment" >
+        <action
+            android:id="@+id/action_editSeccionesFragment_to_listSeccionesFragment"
+            app:destination="@id/listSeccionesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addDependencyFragment"
+        android:name="com.example.inventorylivedata.iu.dependency.AddDependencyFragment"
+        android:label="fragment_add_dependency2"
+        tools:layout="@layout/fragment_add_dependency2" />
+</navigation>
