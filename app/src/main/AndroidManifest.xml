@@ -11,16 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
         <activity android:name="com.example.inventorylivedata.iu.InventoryActivity">
-
-        </activity>
-        <activity android:name="com.example.inventorylivedata.iu.signup.SignUpActivity" />
-        <activity android:name="com.example.inventorylivedata.iu.login.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
+
+        <activity android:name="com.example.inventorylivedata.iu.signup.SignUpActivity" />
+        <activity android:name="com.example.inventorylivedata.iu.login.LoginActivity" />
+
         <activity
             android:name="com.example.inventorylivedata.iu.SplashActivity"
             android:theme="@style/NoActionBar">

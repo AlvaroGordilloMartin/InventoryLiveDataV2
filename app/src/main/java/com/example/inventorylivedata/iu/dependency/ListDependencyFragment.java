@@ -5,6 +5,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,7 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListDependencyFragment extends Fragment implements ListDependencyContract.View {
+public class ListDependencyFragment extends Fragment{
 
     private LinearLayout llLoading;
     private LinearLayout llNoData;
@@ -35,12 +39,12 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
     private DependencyAdapter adapter;
     private List<Dependency> list;
     DependencyRepository repository = new DependencyRepository();
-    private ListDependencyContract.Presenter presenter;
     private DependencyAdapter.OnDepedencyClickListener listener;
     private Bundle bundle;
     private NavController navController;
     private Dependency deleted;
     FloatingActionButton button;
+    ListDependencyViewModel viewModel;
 
 
     @Override
@@ -63,17 +67,13 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        llLoading = view.findViewById(R.id.llLoading);
-        llNoData = view.findViewById(R.id.llNoData);
-        rvDependency = view.findViewById(R.id.rvDependency);
-        button = view.findViewById(R.id.fab);
+        viewModel = ViewModelProviders.of(this).get(ListDependencyViewModel.class);
+        initUI(view);
+        initRecycler();
+        //Finalmente solicitamos los datos
+        getDependency();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_listDependencyFragment_to_addDependencyFragment);
-            }
-        });
+        button.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_listDependencyFragment_to_addDependencyFragment));
 
         navController = Navigation.findNavController(view);
         listener = new DependencyAdapter.OnDepedencyClickListener() {
@@ -91,6 +91,40 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
             }
         };
 
+
+
+
+        // Se inicializa el presenter
+    }
+
+    private void getDependency() {
+        showProgress();
+        //Observamos el estado o el cambio del ViewModel
+        viewModel.getDependencies().observe(getViewLifecycleOwner(), dependencies -> {
+            adapter.update(dependencies);
+            hideProgress();
+        });
+    }
+
+
+
+    /**
+     * Metodo que inicializa las vistas
+     * @param view
+     */
+    private void initUI(View view) {
+        llLoading = view.findViewById(R.id.llLoading);
+        llNoData = view.findViewById(R.id.llNoData);
+        button = view.findViewById(R.id.fab);
+        rvDependency = view.findViewById(R.id.rvDependency);
+
+    }
+
+    /**
+     * Metodo que incializa el recyclerView
+     */
+    private void initRecycler() {
+
         list = repository.get();
 
         //1. Crear el adapter
@@ -104,9 +138,6 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
 
         //4. Vincular la vista al modelo
         rvDependency.setAdapter(adapter);
-
-        // Se inicializa el presenter
-        presenter = new ListDependencyPresenter(this);
     }
 
     public void onEditDepedencyFragment(Dependency dependency) {
@@ -131,7 +162,6 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
     @Override
     public void onStart() {
         super.onStart();
-        presenter.load();
 
         if(getArguments() !=null)
             if(getArguments().getBoolean(BaseDialogFragment.CONFIRM_DELETE)){
@@ -150,17 +180,14 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
     /**
      * Método que muestras el LineasLayout que contiene el progressbar
      */
-    @Override
     public void showProgress() {
         llLoading.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void hideProgress() {
         llLoading.setVisibility(View.GONE);
     }
 
-    @Override
     public void setNoData() {
         llNoData.setVisibility(View.VISIBLE);
     }
@@ -169,7 +196,6 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
      * Este método es el que se ejecuta cuando se elimina correctamente una dependencia de la bd
      * y muestra un snackbar con la opción Undo
      */
-    @Override
     public void onSuccessDeleted() {
         adapter.delete(deleted);
         showSnackBarDeleted();
@@ -193,19 +219,18 @@ public class ListDependencyFragment extends Fragment implements ListDependencyCo
      * Deshace el borrado de la dependencia
      */
     private void undoDeleted() {
-        presenter.undo(deleted);
     }
 
 
     /**
      * Método que inserta una dependencia previamente eliminada
      */
-    @Override
+
     public void onSuccessUndo(){
         adapter.add(deleted);
     }
 
-    @Override
+
     public void onSuccess(List<Dependency> list) {
         //1. Si esta visible NODATA se cambia visibilidad a GONE.
         if (llNoData.getVisibility() == View.VISIBLE)
