@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.inventorylivedata.iu.dependency.ListDependencyViewModel" />
+    </data>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,6 +19,7 @@
     <LinearLayout
         android:id="@+id/llNoData"
         android:visibility="gone"
+        app:emptyState="@{viewModel.empty}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -30,10 +40,18 @@
             android:text="@string/tvNoData" />
     </LinearLayout>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipereferesh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDependency"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:emptyState="@{!viewModel.empty}"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
         layout="@layout/layout_progressbar"
@@ -48,3 +66,4 @@
         android:clickable="true"
         android:src="@drawable/ic_baseline_add_circle_outline_24" />
 </FrameLayout>
+</layout>

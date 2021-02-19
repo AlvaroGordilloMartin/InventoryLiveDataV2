@@ -25,7 +25,7 @@ public class ListDependencyViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Dependency>> getDependencies() {
-        return dependencies;
+        return new MutableLiveData<>(DependencyRepository.getInstance().get());
     }
 
     public LiveData<Integer> getSize() {
@@ -37,7 +37,7 @@ public class ListDependencyViewModel extends ViewModel {
     }
 
     public void delete(Dependency deleted){
-
+        DependencyRepository.getInstance().delete(deleted);
     }
 
     public void undo(Dependency deleted){

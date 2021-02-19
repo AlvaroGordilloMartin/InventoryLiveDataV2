@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +26,15 @@ import com.example.inventorylivedata.data.model.Dependency;
 import com.example.inventorylivedata.data.repository.DependencyRepository;
 import com.example.inventorylivedata.iu.adapter.DependencyAdapter;
 import com.example.inventorylivedata.iu.base.BaseDialogFragment;
+import com.example.inventorylivedata.iu.base.BaseView;
+import com.example.inventorylivedata.iu.base.BaseViewModelDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListDependencyFragment extends Fragment{
+public class ListDependencyFragment extends Fragment {
 
     private LinearLayout llLoading;
     private LinearLayout llNoData;
@@ -45,7 +48,8 @@ public class ListDependencyFragment extends Fragment{
     private Dependency deleted;
     FloatingActionButton button;
     ListDependencyViewModel viewModel;
-
+    BaseViewModelDialog modelDialog;
+    SwipeRefreshLayout swiperefresh;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,6 @@ public class ListDependencyFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_dependency, container, false);
         list = new ArrayList<>();
-
         return view;
     }
 
@@ -73,9 +76,45 @@ public class ListDependencyFragment extends Fragment{
         //Finalmente solicitamos los datos
         getDependency();
 
+        swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDependency();
+            }
+        });
+
         button.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_listDependencyFragment_to_addDependencyFragment));
 
         navController = Navigation.findNavController(view);
+
+
+
+        // Se inicializa el presenter
+    }
+
+    private void getDependency() {
+        showProgress();
+        //Observamos el estado o el cambio del ViewModel
+        viewModel.getDependencies().observe(getViewLifecycleOwner(), dependencies -> {
+            adapter.update(dependencies);
+            swiperefresh.setRefreshing(false);
+            hideProgress();
+        });
+    }
+
+
+    /**
+     * Metodo que inicializa las vistas
+     *
+     * @param view
+     */
+    private void initUI(View view) {
+        llLoading = view.findViewById(R.id.llLoading);
+        llNoData = view.findViewById(R.id.llNoData);
+        button = view.findViewById(R.id.fab);
+        rvDependency = view.findViewById(R.id.rvDependency);
+        swiperefresh = view.findViewById(R.id.swipereferesh);
+
         listener = new DependencyAdapter.OnDepedencyClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,33 +130,6 @@ public class ListDependencyFragment extends Fragment{
             }
         };
 
-
-
-
-        // Se inicializa el presenter
-    }
-
-    private void getDependency() {
-        showProgress();
-        //Observamos el estado o el cambio del ViewModel
-        viewModel.getDependencies().observe(getViewLifecycleOwner(), dependencies -> {
-            adapter.update(dependencies);
-            hideProgress();
-        });
-    }
-
-
-
-    /**
-     * Metodo que inicializa las vistas
-     * @param view
-     */
-    private void initUI(View view) {
-        llLoading = view.findViewById(R.id.llLoading);
-        llNoData = view.findViewById(R.id.llNoData);
-        button = view.findViewById(R.id.fab);
-        rvDependency = view.findViewById(R.id.rvDependency);
-
     }
 
     /**
@@ -125,7 +137,7 @@ public class ListDependencyFragment extends Fragment{
      */
     private void initRecycler() {
 
-        list = repository.get();
+        //list = repository.get();
 
         //1. Crear el adapter
         adapter = new DependencyAdapter(list, listener);
@@ -148,33 +160,27 @@ public class ListDependencyFragment extends Fragment{
     }
 
     public void onDeleteDependency(View v) {
+        //Inicializo el viewmodel dentro del ciclo de vida de la activity, cualquier otro fragment que instancie esa clase obtiene la misma instancia
+        modelDialog = ViewModelProviders.of(requireActivity()).get(BaseViewModelDialog.class);
         Dependency dependency = adapter.getItem(rvDependency.getChildAdapterPosition(v));
         Bundle bundle = new Bundle();
-        bundle.putSerializable("dependencia",dependency);
+        bundle.putSerializable("dependencia", dependency);
         bundle.putString(BaseDialogFragment.TITLE, getString(R.string.title_delete_dependency));
         bundle.putString(BaseDialogFragment.MESSAGE
                 , String.format(getString(R.string.message_delete_dependency), dependency.getShortname()));
 
         NavHostFragment.findNavController(this)
                 .navigate(R.id.action_listDependencyFragment_to_baseDialogFragment, bundle);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        modelDialog.getConfirm().observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    viewModel.delete(dependency);
 
-        if(getArguments() !=null)
-            if(getArguments().getBoolean(BaseDialogFragment.CONFIRM_DELETE)){
-                //deleted = (Dependency) getArguments().getSerializable();
-                repository.delete(deleted);
-                showSnackBarDeleted();
+                }
             }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        //presenter
+        });
     }
 
     /**
@@ -202,7 +208,7 @@ public class ListDependencyFragment extends Fragment{
     }
 
     private void showSnackBarDeleted() {
-        Snackbar.make(getView(),getString(R.string.confirm_delete_dependency),Snackbar.LENGTH_SHORT)
+        Snackbar.make(getView(), getString(R.string.confirm_delete_dependency), Snackbar.LENGTH_SHORT)
                 .setAction(getString(R.string.undo), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -211,8 +217,6 @@ public class ListDependencyFragment extends Fragment{
                 }).show();
 
     }
-
-
 
 
     /**
@@ -226,7 +230,7 @@ public class ListDependencyFragment extends Fragment{
      * Método que inserta una dependencia previamente eliminada
      */
 
-    public void onSuccessUndo(){
+    public void onSuccessUndo() {
         adapter.add(deleted);
     }
 

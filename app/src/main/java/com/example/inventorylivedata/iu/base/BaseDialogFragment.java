@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.inventorylivedata.R;
@@ -21,6 +22,7 @@ public class BaseDialogFragment extends DialogFragment {
     public static final String MESSAGE = "message";
     public static final String CONFIRM_DELETE = "confirm delete";
     public static final String DELETED = "deleted";
+    BaseViewModelDialog baseViewModelDialog;
 
     DependencyRepository repository = new DependencyRepository();
     SeccionesRepository seccionesRepository = new SeccionesRepository();
@@ -37,17 +39,17 @@ No funciona con el componenete navigation si se puede usar con el fragment manag
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        if (getArguments()!=null) {
-            String title=getArguments().getString(TITLE);
+        if (getArguments() != null) {
+            String title = getArguments().getString(TITLE);
             String message = getArguments().getString(MESSAGE);
-            if(title.equals(getString(R.string.title_delete_seccion))){
+            if (title.equals(getString(R.string.title_delete_seccion))) {
                 builder.setTitle(title);
                 builder.setMessage(message);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //ESTO ESTA FEISIMO
-                        seccionesRepository.delete((Seccion)getArguments().getSerializable("seccion"));
+                        seccionesRepository.delete((Seccion) getArguments().getSerializable("seccion"));
                         NavHostFragment.findNavController(BaseDialogFragment.this)
                                 .navigate(R.id.listSeccionesFragment);
 
@@ -64,31 +66,22 @@ No funciona con el componenete navigation si se puede usar con el fragment manag
                 });
                 return builder.create();
             }
-            if(title.equals(getString(R.string.title_delete_dependency))) {
+            if (title.equals(getString(R.string.title_delete_dependency))) {
                 builder.setTitle(title);
                 builder.setMessage(message);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //ESTO ESTA FEISIMO
-                        repository.delete((Dependency) getArguments().getSerializable("dependencia"));
-                        NavHostFragment.findNavController(BaseDialogFragment.this)
-                                .navigate(R.id.listDependencyFragment);
+                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+
+                    baseViewModelDialog = ViewModelProviders.of(requireActivity()).get(BaseViewModelDialog.class);
+                    baseViewModelDialog.getConfirm().setValue(true);
+                    NavHostFragment.findNavController(BaseDialogFragment.this)
+                            .navigate(R.id.listDependencyFragment);
+                    dismiss();
 
 
-                        //NO FUNCIONA CON NAVIGATION COMPONENT, da error porque getTargetFragment es null
-                        //((onPositiveClickListener)getTargetFragment()).onPositiveClick();
-                    }
                 });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                });
+                builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dismiss());
                 return builder.create();
-            }
-            else
+            } else
                 return builder.create();
         }
         return null;
